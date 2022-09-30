@@ -23,11 +23,40 @@ class UserTest extends TestCase
             'email'  => 'jhondoe@gmail.com'
         ]);
         $user2 = User::make([
-            'name' =>'dary ',
+            'name' =>'DARY',
             'email'  => 'dary@gmail.com'
         ]);
 
-        $this->assertTrue($user1->name != $user2->name);
+        $this->assertTrue(($user1->email != $user2->email) &&
+        ($user1->name != $user2->name));
+   }
+
+   public function test_delete_user(){
+        $user = User::factory()->count(1)->make();
+        $user = User::first();
+
+        if($user){
+            $user->delete();
+        }
+        $this->assertTrue(true);
+   }
+
+   public function test_guarda_nuevo_user(){
+        $respuesta = $this->post('/register', [
+            'name' => 'Carlos',
+            'email' => 'carlos@gmail.com',
+            'password' => 'carlos123',
+            'password_confirmation' => 'carlos123'
+        ]);
+        return $respuesta->assertRedirect('/home');
+   }
+
+   public function test_loguea_usuario(){
+        $respuesta = $this->post('/login', [
+            'email'=>'carlos@gmail.com',
+            'password'=>'carlos123'
+        ]);
+        return $respuesta->assertRedirect('/home');
    }
 
 }
